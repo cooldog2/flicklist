@@ -8,7 +8,7 @@ var model = {
 
 var api = {
   root: "https://api.themoviedb.org/3",
-  token: "TODO" // TODO 0 put your api key here
+  token: "2bf2ea44243020f9c5d6825842aa9ac0" // TODO 0 put your api key here
 }
 
 
@@ -27,8 +27,12 @@ function discoverMovies(callback) {
 			console.log("We got a response from The Movie DB!");
 			console.log(response);
 			
-			// TODO 2
+			// TODO 2 (DONE)
 			// update the model, setting its .browseItems property equal to the movies we recieved in the response
+			model.browseItems = response.results;
+			
+			//console.log("here is the model:");  //for testing
+			//console.log(model);                 //for testing
 			
 			// invoke the callback function that was passed in. 
 			callback();
@@ -37,35 +41,51 @@ function discoverMovies(callback) {
   
 }
 
-
 /**
  * re-renders the page with new content, based on the current state of the model
  */
 function render() {
   // TODO 7
   // clear everything from both lists
+  $("#section-watchlist ul").empty();
+  $("#section-browse ul").empty();
   
   // TODO 6
   // for each movie on the user's watchlist, insert a list item into the <ul> in the watchlist section
+  model.watchlistItems.forEach(function(movie) {
+  	var itemView = $("<li></li>").text(movie.original_title);  
+  	$("#section-watchlist ul").append(itemView);    
+  });
   
   // for each movie on the current browse list, 
   model.browseItems.forEach(function(movie) {
-		// TODO 3
+		// TODO 3 (DONE)
 		// insert a list item into the <ul> in the browse section
-		
-		// TODO 4
+		  var title = $("<p></p>").text(movie.original_title);                                    //the api uses 'original_title' as the property for the title; the spec wants title in the p tag otherwise I could have put in the li tag
+	
+		// TODO 4 (DONE)
 		// the list item should include a button that says "Add to Watchlist"
+		  var button = $("<button></button>").text("Add to Watch list").click(function() {       //.click() attaches an event handler
+		  	model.watchlistItems.push(movie);                                                    //add each movie to watchlist (end of the array)
+		  	render();                                                                            //call render function anytime model changes; re-display view
+		  	          //console.log("click");  //testing               
+		  	          //console.log(model);    //testing
+		  });      
+	
+		  var itemView = $("<li></li>").append(title).append(button);                  //creating a list item element; & appending. Appending also returns the list item
+		  
+		  $("#section-browse ul").append(itemView);                                    //??? why was a variable not assigned to #section-browse?
 		
-		// TODO 5
+		// TODO 5 (DONE)
 		// when the button is clicked, this movie should be added to the model's watchlist and render() should be called again
+          
+            //all items for this todo was done in todo 4
   });
   
 }
-
 
 // When the HTML document is ready, we call the discoverMovies function,
 // and pass the render function as its callback
 $(document).ready(function() {
   discoverMovies(render);
 });
-
