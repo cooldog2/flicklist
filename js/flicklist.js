@@ -14,7 +14,7 @@ var model = {
 
 var api = {
   root: "https://api.themoviedb.org/3",
-  token: "8e888fa39ec243e662e1fb738c42ae99" // TODO 0 add your api key
+  token: "2bf2ea44243020f9c5d6825842aa9ac0" // TODO 0 add your api key
 }
 
 
@@ -46,13 +46,22 @@ function discoverMovies(callback) {
  * the callback function that was passed in
  */
 function searchMovies(searchTerm, callback) {
-  console.log("searching for movies with '" + searchTerm + "' in their title...");
+  console.log("searching for movies with title of:'" + searchTerm + "' in their title...");
 
   // TODO 9
   // implement this function as described in the comment above
   // you can use the body of discoverMovies as a jumping off point
-
-
+      $.ajax({
+        url: api.root + "/search/movie", 
+        data: {
+          api_key: api.token,
+          query: searchTerm              //query is the searchTerm user entered; the api uses 'query'
+        },
+        success: function(response) {
+      model.browseItems = response.results;
+      callback();
+        }
+      });
 }
 
 
@@ -70,8 +79,8 @@ function render() {
     var title = $("<p></p>").text(movie.original_title);
     var itemView = $("<li></li>")
       .append(title)
-      // TODO 3
-      // give itemView a class attribute of "item-watchlist"
+      .attr("class", "item-watchlist");            // TODO 3 give itemView a class attribute of "item-watchlist"
+      
 
     $("#section-watchlist ul").append(itemView);
   });
@@ -84,19 +93,23 @@ function render() {
       .click(function() {
         model.watchlistItems.push(movie);
         render();
-      });
-      // TODO 2
+      })
+      .prop("disabled", model.watchlistItems.indexOf(movie) !== -1);      //indexOf returns the index of the movie in the watchlistItems array (if there is a movie); 
+                                                                          ////if there isn't one, it returns -1 which means it didn't find anything in the array
+                                                                          //evaluates to true if the movie is in the list; otherwise evaluates to false
+      // TODO 2 (DONE - ABOVE)                                                          
       // the button should be disabled if this movie is already in
       // the user's watchlist
       // see jQuery .prop() and Array.indexOf()
+      
 
-
-    // TODO 1
+    // TODO 1 (DONE)
     // create a paragraph containing the movie object's .overview value
     // then, in the code block below,
     // append the paragraph in between the title and the button
 
-
+    var description = $("<p></p>").text(movie.overview);        //add description 
+    
     // append everything to itemView, along with an <hr/>
     var itemView = $("<li></li>")
       .append($("<hr/>"))
