@@ -52,8 +52,8 @@ function render() {
     model.watchlistItems.forEach(function(movie) {
 
     //  $('#section-watchlist').append('<li>'+ movie +'</li>');
-
-      var watchItem = $("<li></li>").text(movie.original_title);
+      var title = $("<p></p>").text(movie.original_title);
+      var watchItem = $("<li></li>").append(title);
       $('#section-watchlist ul').append(watchItem);
 
       });
@@ -63,15 +63,16 @@ function render() {
   model.browseItems.forEach(function(movie) {
 		// TODO 3 (DONE)
 		// insert a list item into the <ul> in the browse section
-      var listItem = $("<li></li>").text(movie.title); //title is an attribute, and movie is the object
+      var title = $("<p></p>").text(movie.title);
+      var listItem = $("<li></li>").append(title); //title is an attribute, and movie is the object
       $('#section-browsing').append(listItem);
 
       // TODO 4 (DONE)
 		// the list item should include a button that says "Add to Watchlist"
-      var button = $('<input/>').attr({
-                             type: "submit",
+       var button = $('<input/>').attr({
+                              type: "submit",
                              value: "Add To Watchlist"
-                        });
+                           });
        $(listItem).append(button);
 
 		// TODO 5 (DONE)
